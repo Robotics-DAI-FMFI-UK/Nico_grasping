@@ -2,15 +2,14 @@ import numpy as np
 
 
 class MSOM:
-    def __init__(self, input_dimensions, output_dimensions, context_dimensions, alpha=0.1, beta=0.1, sigma=1.0):
+    def __init__(self, input_dimensions, output_dimensions, alpha=0.1, beta=0.1, sigma=1.0):
         self.input_dimensions = input_dimensions
         self.output_dimensions = output_dimensions
-        self.context_dimensions = context_dimensions
         self.alpha = alpha  # learning_rate
         self.beta = beta  # context_rate
         self.sigma = sigma
         self.weights = np.random.rand(output_dimensions[0], output_dimensions[1], input_dimensions)
-        self.context_weights = np.random.rand(output_dimensions[0], output_dimensions[1], context_dimensions)
+        self.context_weights = np.random.rand(output_dimensions[0], output_dimensions[1], input_dimensions)
         self.qError = 0
 
     def train(self, data, epochs):
@@ -27,6 +26,7 @@ class MSOM:
         for i in range(self.output_dimensions[0]):
             for j in range(self.output_dimensions[1]):
                 dist = self.calculate_distance(x, i, j)
+
                 if dist < min_dist:
                     min_dist = dist
                     best_matching_unit = np.array([i, j])
@@ -51,14 +51,15 @@ class MSOM:
     def calculate_distance(self, x, i, j):
         input_weight = self.weights[i, j]
         context_weight = self.context_weights[i, j]
+
         return (1 - self.alpha) * np.linalg.norm(x - input_weight) + self.alpha * np.linalg.norm(
             context_weight - input_weight)
 
 
 # Usage example
-data = np.random.rand(100, 3, 3)
+data = np.random.rand(100, 4, 3)
 #100 samples with three features each (representing RGB colors) arranged in sequences of three colors.
-msom = MSOM(input_dimensions=3, output_dimensions=(5, 5), context_dimensions=3)
+msom = MSOM(input_dimensions=3, output_dimensions=(5, 5))
 msom.train(data, epochs=100)
 
 # Creating a color map based on the order of input samples

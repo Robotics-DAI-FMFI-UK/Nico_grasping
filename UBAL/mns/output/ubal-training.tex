@@ -1,0 +1,73 @@
+\documentclass[10pt]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{tikz,pgfplots}
+\pgfplotsset{compat=1.16}
+\usepackage{pgfplotstable}
+\usepackage{xcolor}
+\usepgfplotslibrary{fillbetween}
+
+\begin{document}
+
+\pgfplotstableread{acc_f_test_k8.txt}\accftest
+\pgfplotstableread{acc_b_test_k8.txt}\accbtest
+\pgfplotstableread{mse_b_train_k8.txt}\mseftrain
+\pgfplotstableread{mse_f_train_k8.txt}\msebtrain
+		
+\begin{tikzpicture}
+	\begin{axis}[
+		xlabel={epoch},
+		ylabel={accuracy},
+		ytick distance=0.1,		
+		xmin=0,		
+		height=8cm,
+		width=12cm,
+		grid=major,
+        ]
+		\addplot plot[color=blue,mark=*,mark size=1.8pt,mark repeat={5},mark options={blue}] table[x=x,y=y] \accftest;	\label{acc_f_test};		
+		\addplot [name path=accftest_upper,draw=none] table[x=x,y expr=\thisrow{y}+\thisrow{err}] \accftest; 
+		\addplot [name path=accftest_lower,draw=none] table[x=x,y expr=\thisrow{y}-\thisrow{err}] \accftest;
+		\addplot [fill=blue!80!gray!10!white] fill between[of=accftest_upper and accftest_lower];
+
+		
+		\addplot plot[color=red,mark=square*,mark size=1.8pt,mark repeat={5},mark options={red}] table[x=x,y=y] \accbtest; \label{acc_b_test};	
+		\addplot [name path=accbtest_upper,draw=none] table[x=x,y expr=\thisrow{y}+\thisrow{err}] \accbtest;
+		\addplot [name path=accbtest_lower,draw=none] table[x=x,y expr=\thisrow{y}-\thisrow{err}] \accbtest;
+		\addplot [fill=red!80!gray!10!white] fill between[of=accbtest_upper and accbtest_lower];		
+						
+		
+	\end{axis}
+	
+	\begin{axis}[
+		axis y line*=right,	
+		ylabel={mean squared error},
+		ylabel near ticks,
+		height=8cm,
+		width=12cm,
+		grid=major,
+		legend style={at={(0.5,-0.2)},anchor=north},	
+		legend columns=4,
+		xtick=\empty,
+		xmin=0,
+		ytick distance=0.25
+		]		
+		\addlegendimage{/pgfplots/refstyle=acc_f_test}\addlegendentry{Test accuracy Forward}
+		\addlegendimage{/pgfplots/refstyle=acc_b_test}\addlegendentry{Test accuracy Backward}
+		
+		\addplot plot[color=blue,mark=triangle*,mark size=1.8pt,mark repeat={5},mark options={blue}] table[x=x,y=y] \mseftrain;
+		\addplot [name path=mseftrain_upper,draw=none] table[x=x,y expr=\thisrow{y}+\thisrow{err}] \mseftrain;
+		\addplot [name path=mseftrain_lower,draw=none] table[x=x,y expr=\thisrow{y}-\thisrow{err}] \mseftrain;
+		\addplot [fill=blue!80!gray!10!white] fill between[of=mseftrain_upper and mseftrain_lower];
+		\addlegendentry{Train MSE Forward}
+		
+		\addplot plot[color=red,mark=diamond*,mark size=1.8pt,mark repeat={5},mark options={red}] table[x=x,y=y] \msebtrain;
+		\addplot [name path=msebtrain_upper,draw=none] table[x=x,y expr=\thisrow{y}+\thisrow{err}] \msebtrain;
+		\addplot [name path=msebtrain_lower,draw=none] table[x=x,y expr=\thisrow{y}-\thisrow{err}] \msebtrain;
+		\addplot [fill=red!80!gray!10!white] fill between[of=msebtrain_upper and msebtrain_lower];
+		\addlegendentry{Train MSE Backward}
+		
+	\end{axis}	
+\end{tikzpicture}
+
+
+\end{document}

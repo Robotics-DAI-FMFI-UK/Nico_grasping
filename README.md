@@ -1,11 +1,18 @@
-# SOM and MSOM Implementations
+# Master thesis repository
 
-This repository contains Python implementations of a simple Self-Organizing Map (SOM) and Merge Self-Organizing Map (MSOM).
+This repository contains datasets related to real and simulated grasps performed by the NICO robot. The datasets include:
+- Datasets of Real and Simulated Robot NICO Grasps
+- F5 and STSp grasps implemented by the NeuroNet library.
+- UBAL implementation with input data.
+- IK Solver program extended to compute coordinates from joint angles.
+- Program for rotating 3D points.
+- Data converters.
+- IR sensor project: A program that enables a robot to perceive the surface of a table using an IR sensor.
+- SOM and MSOM implemented in Python.
 
-## Files
+Feel free to explore the datasets and use them for your research or projects.
 
-- `som.py`: Python implementation of a simple SOM.
-- `msom.py`: Python implementation of a Merge SOM.
+
 
 ## Data
 

@@ -10,7 +10,6 @@ This repository contains datasets related to real and simulated grasps performed
 - IR sensor project: A program that enables a robot to perceive the surface of a table using an IR sensor.
 - SOM and MSOM implemented in Python.
 
-Feel free to explore the datasets and use them for your research or projects.
 
 
 
